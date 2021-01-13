@@ -4,6 +4,9 @@ import std/[
   options,
   os
 ]
+
+# from strutils import startsWith
+
 import dotenv, dimscord
 import nimcordbot/[
   command,
@@ -29,7 +32,7 @@ proc onReady(s: Shard, r: Ready) {.event(discord).} =
 # message_create event
 proc messageCreate(s: Shard, m: Message) {.event(discord).} =
     if not m.content.startsWith(prefix) or m.author.bot: return
-    if m.content == "!ping":
+    if m.content == prefix & "ping":
         let
             before = epochTime() * 1000
             msg = await discord.api.sendMessage(m.channel_id, "ping?")
@@ -40,7 +43,7 @@ proc messageCreate(s: Shard, m: Message) {.event(discord).} =
             msg.id,
             "Pong! took " & $int(after - before) & "ms | " & $s.latency() & "ms."
         )
-    elif m.content == "!embed":
+    elif m.content == prefix & "embed":
         discard await discord.api.sendMessage(
             m.channel_id,
             embed = some Embed(
