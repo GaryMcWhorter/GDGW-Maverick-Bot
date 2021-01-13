@@ -3,7 +3,7 @@ import std/[
   tables,
   options
 ]
-
+export tables
 {.experimental: "dotOperators".}
 
 type Command = object
@@ -19,18 +19,11 @@ Command.construct(true):
   prefix: @[]
   cooldown: 1
 
-proc `.()`*(c: Command, msg: string) =
+proc invoke*(c: Command, msg: string) =
   c.command(msg)
 
-var compTimeComTable{.compileTime.} = initTable[string, Command]()
-const commandTable = static compTimeComTable
-
+var compTimeComTable*{.compileTime.} = initTable[string, Command]()
 proc addCommand*(c: Command){.compileTime.} =
+  echo c
   for prefix in c.prefix:
     compTimeComTable[prefix] = c
-
-proc getCommand*(prefix: string): Option[Command] =
-  if prefix in commandTable:
-    some(commandTable[prefix])
-  else:
-    none(Command)

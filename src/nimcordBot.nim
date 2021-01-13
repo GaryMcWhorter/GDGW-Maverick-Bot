@@ -5,13 +5,21 @@ import std/[
   os
 ]
 import dotenv, dimscord
-import nimcordbot/command
+import nimcordbot/[
+  command,
+  search
+]
+
+# Has to be after all command imports
+const commandTable = compTimeComTable
+
+#Test case
+commandTable["!srch"].invoke("hello world")
 
 let env = initDotEnv()
 env.load()
 
 let discord = newDiscordClient(getEnv("BOT_TOKEN"))
-
 # on_ready event
 proc onReady(s: Shard, r: Ready) {.event(discord).} =
     echo "Ready as " & $r.user
