@@ -5,14 +5,14 @@ import std/[
   os
 ]
 
-# from strutils import startsWith
-
 import dotenv, dimscord
 import nimcordbot/[
-  command,
-  search,
+  utils,
   startsWith
 ]
+
+# Import all commands
+importCommands()
 
 # Has to be after all command imports
 const commandTable = compTimeComTable
