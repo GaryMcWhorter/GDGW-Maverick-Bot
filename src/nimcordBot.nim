@@ -8,11 +8,16 @@ import std/[
 import dotenv, dimscord
 import nimcordbot/[
   utils,
-  startsWith
+  startsWith,
+  database
 ]
 
 # Import all commands
 importCommands()
+
+# Load env's as early as possible
+let env = initDotEnv()
+env.load()
 
 # Has to be after all command imports
 const commandTable = compTimeComTable
@@ -20,8 +25,8 @@ const commandTable = compTimeComTable
 #Test case
 commandTable["!srch"].invoke("hello world")
 
-let env = initDotEnv()
-env.load()
+
+var db = mongoInit()
 
 let discord = newDiscordClient(getEnv("BOT_TOKEN"))
 let prefix: string = getEnv("BOT_PREFIX")
@@ -55,3 +60,6 @@ proc messageCreate(s: Shard, m: Message) {.event(discord).} =
 
 # Connect to Discord and run the bot
 waitFor discord.startSession()
+
+close db
+echo "db closed"
