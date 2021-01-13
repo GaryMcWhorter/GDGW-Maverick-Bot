@@ -1,10 +1,11 @@
-import
-    dimscord,
-    asyncdispatch,
-    times,
-    options,
-    dotenv,
-    os
+import std/[
+  asyncdispatch,
+  times,
+  options,
+  os
+]
+import dotenv, dimscord
+import nimcordbot/command
 
 let env = initDotEnv()
 env.load()
