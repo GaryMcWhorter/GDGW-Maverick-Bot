@@ -24,8 +24,14 @@ proc invoke*(c: Command, dc: DiscordClient, msg: string, dMsg: Message){.async.}
 
 var compTimeComTable*{.compileTime.} = initTable[string, Command]()
 macro command*(dslBody: untyped): untyped=
-  ## Makes it so you dont need to do any repetitive work
-  ## Generates the proc and subscribes it to the table
+  ## Makes it so you dont need to do any repetitive work.
+  ## Generates the proc and subscribes it to the table.
+  ## Provide a Name, a Description, and the body.
+  ## Body has the following variables injected:
+  ## `discord` as a `DiscordClient`
+  ## `msg` as the string parameter stream
+  ## `discordMsg` as the invoking discord `Message`
+
   result = newStmtList()
   var 
     body, name, nameStr: NimNode
