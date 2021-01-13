@@ -7,16 +7,22 @@ import std/[
 ]
 
 import dotenv, dimscord
-import nimcordbot/utils
+import nimcordbot/[
+  utils,
+  database
+]
 
 # Import all commands
 importCommands()
 
+# Load env's as early as possible
+let env = initDotEnv()
+env.load()
+
 # Has to be after all command imports
 const commandTable = compTimeComTable
 
-let env = initDotEnv()
-env.load()
+var db = mongoInit()
 
 let discord = newDiscordClient(getEnv("BOT_TOKEN"))
 
@@ -34,3 +40,6 @@ proc messageCreate(s: Shard, m: Message) {.event(discord).} =
 
 # Connect to Discord and run the bot
 waitFor discord.startSession()
+
+close db
+echo "db closed"
