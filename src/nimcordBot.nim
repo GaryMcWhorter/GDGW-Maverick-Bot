@@ -22,7 +22,8 @@ env.load()
 # Has to be after all command imports
 const commandTable = compTimeComTable
 
-var db = mongoInit()
+when not defined(dbPoopy):
+  var db = mongoInit()
 
 let discord = newDiscordClient(getEnv("BOT_TOKEN"))
 
@@ -40,6 +41,6 @@ proc messageCreate(s: Shard, m: Message) {.event(discord).} =
 
 # Connect to Discord and run the bot
 waitFor discord.startSession()
-
-close db
-echo "db closed"
+when not defined(dbPoopy):
+  close db
+  echo "db closed"

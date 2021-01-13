@@ -2,7 +2,6 @@ import constructor/construct
 import dimscord
 import std/[
   tables,
-  options,
   asyncdispatch
 ]
 export tables, dimscord, asyncdispatch
