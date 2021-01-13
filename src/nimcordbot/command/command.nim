@@ -23,7 +23,7 @@ proc invoke*(c: Command, msg: string) =
   c.command(msg)
 
 var compTimeComTable*{.compileTime.} = initTable[string, Command]()
-proc addCommand*(c: Command){.compileTime.} =
-  echo c
-  for prefix in c.prefix:
-    compTimeComTable[prefix] = c
+template addCommand*(c: Command)=
+  static:
+    for prefix in c.prefix:
+      compTimeComTable[prefix] = c
