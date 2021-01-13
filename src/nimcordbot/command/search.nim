@@ -1,8 +1,9 @@
 import command
 import std/uri
-proc search(dc: DiscordClient, s: string, dmsg: Message){.async.}= 
-  let res = "https://duckduckgo.com/" & encodeurl(s, false)
-  discard await dc.api.sendMessage(dmsg.channel_id, res)
 
-addCommand:
-  initCommand("search", search, "lmddgtfy")
+command:
+  name: search
+  description: "Sends search URL"
+  body:
+    let res = "https://duckduckgo.com/" & encodeurl(msg, false)
+    discard await discord.api.sendMessage(discordMsg.channel_id, res)

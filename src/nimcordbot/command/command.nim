@@ -2,7 +2,8 @@ import constructor/construct
 import dimscord
 import std/[
   tables,
-  asyncdispatch
+  asyncdispatch,
+  macros
 ]
 export tables, dimscord, asyncdispatch
 
@@ -22,6 +23,34 @@ proc invoke*(c: Command, dc: DiscordClient, msg: string, dMsg: Message){.async.}
   await c.command(dc, msg, dmsg)
 
 var compTimeComTable*{.compileTime.} = initTable[string, Command]()
-template addCommand*(c: Command)=
-  static:
-      compTimeComTable[c.name] = c
+macro command*(dslBody: untyped): untyped=
+  ## Makes it so you dont need to do any repetitive work
+  ## Generates the proc and subscribes it to the table
+  result = newStmtList()
+  var 
+    body, name, nameStr: NimNode
+    desc = newStrLitNode("")
+    cooldown = newIntLitNode(1)
+  for node in dslBody:
+    if node[0].kind == nnkident:
+      case $node[0]:
+      of "description":
+        desc = node[1]
+      of "body":
+        body = node[1]
+      of "name":
+        name = node[1][0]
+        nameStr = newStrLitNode($name)
+      of "cooldown":
+        cooldown = node[1]
+      else: discard
+  let
+    client = ident("discord")
+    msg = ident("msg")
+    discordMsg = ident("discordMsg")
+  result.add quote do:
+    proc `name`(`client`: DiscordClient, `msg`: string, `discordMsg`: Message){.async.} =
+      `body`
+  result.add quote do:
+    static:
+      compTimeComTable[`nameStr`] = initCommand(`nameStr`, `name`, `desc`, `cooldown`)
