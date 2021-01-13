@@ -7,7 +7,8 @@ import std/[
 import dotenv, dimscord
 import nimcordbot/[
   command,
-  search
+  search,
+  startsWith
 ]
 
 # Has to be after all command imports
@@ -20,13 +21,14 @@ let env = initDotEnv()
 env.load()
 
 let discord = newDiscordClient(getEnv("BOT_TOKEN"))
+let prefix: string = getEnv("BOT_PREFIX")
 # on_ready event
 proc onReady(s: Shard, r: Ready) {.event(discord).} =
     echo "Ready as " & $r.user
 
 # message_create event
 proc messageCreate(s: Shard, m: Message) {.event(discord).} =
-    if m.author.bot: return
+    if not m.content.startsWith(prefix) or m.author.bot: return
     if m.content == "!ping":
         let
             before = epochTime() * 1000
