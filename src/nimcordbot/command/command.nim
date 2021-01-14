@@ -9,7 +9,6 @@ export tables, dimscord, asyncdispatch
 
 type Command = object
   name, description: string
-  prefix: seq[string]
   command: proc(dc: DiscordClient, msg: string, dMsg: Message){.async.}
   cooldown: int
 

@@ -34,4 +34,9 @@ proc getCommandInfo*(msg, prefix: string): (string, string) =
     if msg[i] == ' ':
       break
     inc i
-  (msg[prefix.len..(i - 1)], msg[(i + 1)..^1])
+  let params = 
+    if i + 1 >= msg.len:
+      ""
+    else:
+      msg[(i + 1)..^1]
+  (msg[prefix.len..(i - 1)], params)
