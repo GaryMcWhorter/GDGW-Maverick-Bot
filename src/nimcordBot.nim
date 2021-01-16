@@ -7,16 +7,12 @@ import dimscord
 import nimcordbot/[
   dotfile,
   utils,
-  harperdb
+  harperdb,
+  commands
 ]
 
 # Import all commands
 importCommands()
-
-
-# Has to be after all command imports
-const commandTable = compTimeComTable
-
 let discord = newDiscordClient(getEnv("BOT_TOKEN"))
 
 let prefix: string = getEnv("BOT_PREFIX")
