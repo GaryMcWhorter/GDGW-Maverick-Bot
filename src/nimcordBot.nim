@@ -1,8 +1,3 @@
-# Load env's as early as possible
-import dotenv
-let env = initDotEnv()
-env.load()
-
 import std/[
   asyncdispatch,
   os,
@@ -10,6 +5,7 @@ import std/[
 
 import dimscord
 import nimcordbot/[
+  dotfile,
   utils,
   harperdb
 ]

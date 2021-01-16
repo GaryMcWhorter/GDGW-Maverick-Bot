@@ -6,14 +6,11 @@ import std/[
     os,
     uri
 ]
-import dotenv
-let env = initDotEnv()
-env.load()
 
-var DB_URL: string = getEnv("DB_URL")
-var DB_AUTH: string = getEnv("DB_AUTH")
-
-let client = newAsyncHttpClient()
+let
+  DB_URL: string = getEnv("DB_URL")
+  DB_AUTH: string = getEnv("DB_AUTH")
+  client = newAsyncHttpClient()
 
 proc post*(jbody: string): Future[Option[string]] {.async.} =
   client.headers = newHttpHeaders({
