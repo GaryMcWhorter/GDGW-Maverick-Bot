@@ -1,15 +1,15 @@
 import std/[
   asyncdispatch,
   httpclient,
-  json,
-  options,
-  os,
-  uri
+  options
 ]
 
+import
+  config
+
 let
-  DB_URL: string = getEnv("DB_URL")
-  DB_AUTH: string = getEnv("DB_AUTH")
+  DB_URL: string = Config.database.url
+  DB_AUTH: string = Config.database.auth
   client = newAsyncHttpClient()
 
 proc post*(jbody: string): Future[Option[string]] {.async.} =

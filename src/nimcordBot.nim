@@ -12,7 +12,7 @@ import
   timestamp
 
 import nimcordbot/[
-  dotfile,
+  config,
   utils,
   harperdb,
   commands
@@ -29,9 +29,10 @@ var
 
 # Import all commands
 importCommands()
-let discord = newDiscordClient(getEnv("BOT_TOKEN"))
+let discord = newDiscordClient(Config.bot.token)
 
-let prefix: string = getEnv("BOT_PREFIX")
+let prefix: string = Config.prefs.botPrefix
+let expCooldown: int = Config.prefs.expCooldown
 # on_ready event
 proc onReady(s: Shard, r: Ready) {.event(discord).} =
   echo "Ready as " & $r.user
@@ -52,7 +53,7 @@ proc onEveryMessage(s: Shard, m: Message) {.async.} =
   # echo $users[m.author.id].lastMessageTimeStamp
   let newTimestamp = initTimestamp()
   # increment exp to the db
-  if newTimestamp - users[m.author.id].lastMessageTimeStamp < 2 * SECOND:
+  if newTimestamp - users[m.author.id].lastMessageTimeStamp < expCooldown * SECOND:
     echo "TOO FAST"
   else:
     let exp = await post(sql &"UPDATE dev.testUsers SET exp = COALESCE(exp + 3, 3) WHERE uid = '{uid}'")

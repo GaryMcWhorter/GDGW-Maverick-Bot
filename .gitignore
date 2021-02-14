@@ -55,4 +55,4 @@ $RECYCLE.BIN/
 .dccache
 *.exe
 nimcordBot
-nimcordBot
+config.toml
