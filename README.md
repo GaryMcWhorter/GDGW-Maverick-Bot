@@ -4,7 +4,7 @@ This is an easily expandable Discord bot written in Nim.
 
 ## Setup and Installation
 After installing Nim, clone this repo, make an `config.toml` file, with the following fields:
-```
+```toml
 [database]
 # Database url, implementation uses HarperDB
 url="https://yourDBURL.harperdbcloud.com"
