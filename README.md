@@ -1,9 +1,9 @@
 # Nimcordbot
-This is an easily expandable Discord bot written in Nim.
+This is an easily expandable Discord bot written in Nim. You must host this on your own computer or server.
 
 
 ## Setup and Installation
-After installing Nim, clone this repo, then make a `config.toml` file with the following fields:
+After installing Nim, clone this repo, then make a `config.toml` file with the following fields in the top level of the project directory:
 ```toml
 [database]
 # Database url, implementation uses HarperDB
@@ -37,3 +37,9 @@ command:
 Compile like normal or use `nimble run` to run the bot.
 
 After compliation you can now send the message `!yourCommandName` and the bot will send a message containing "It sends this message" in response.
+
+## Planned Features
+- [x] Custom DSL for creating new bot commands
+- [ ] Integration with HarperDB for database operations
+- [ ] Built in leveling system for the server
+- [ ] Built in karma thanking system

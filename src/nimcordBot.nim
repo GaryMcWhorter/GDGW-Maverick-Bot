@@ -31,8 +31,9 @@ var
 importCommands()
 let discord = newDiscordClient(Config.bot.token)
 
-let prefix: string = Config.prefs.botPrefix
-let expCooldown: int = Config.prefs.expCooldown
+template prefix(): string = Config.prefs.prefix
+template expCooldown(): int = Config.prefs.expCooldown
+
 # on_ready event
 proc onReady(s: Shard, r: Ready) {.event(discord).} =
   echo "Ready as " & $r.user
@@ -48,7 +49,8 @@ proc onEveryMessage(s: Shard, m: Message) {.async.} =
     let newRecord = %*[{"uid": uid, "name": m.author.username}]
     let res = await post(upsert("dev", "testUsers", $newRecord))
     if res.isSome:
-      discard await discord.api.sendMessage(m.channelID, res.get())
+      # discard await discord.api.sendMessage(m.channelID, res.get())
+      discard
 
   # echo $users[m.author.id].lastMessageTimeStamp
   let newTimestamp = initTimestamp()
@@ -58,7 +60,8 @@ proc onEveryMessage(s: Shard, m: Message) {.async.} =
   else:
     let exp = await post(sql &"UPDATE dev.testUsers SET exp = COALESCE(exp + 3, 3) WHERE uid = '{uid}'")
     if exp.isSome:
-      discard await discord.api.sendMessage(m.channelID, exp.get())
+      # discard await discord.api.sendMessage(m.channelID, exp.get())
+      discard
     users[m.author.id].lastMessageTimeStamp = newTimestamp
 
 
