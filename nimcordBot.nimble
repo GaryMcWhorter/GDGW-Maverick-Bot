@@ -7,11 +7,12 @@ license       = "MIT"
 srcDir        = "src"
 bin           = @["nimcordBot"]
 
-# Set up paths
+# Set up paths and Tasks
 import os, strformat
-let index     = srcDir / $bin[0]
+let filename  = $bin[0]
+let index     = srcDir / filename
 let debug     = "bin/debug"
-let release     = "bin/release"
+let release   = "bin/release"
 
 task maked, "Makes the debug build":
   selfExec(&"c --outdir:{debug} {index}")
@@ -20,10 +21,12 @@ task make, "Makes the release build":
   selfExec(&"c -d:release --outdir:{release} {index}")
 
 task startd, "Makes and runs the debug build":
-  selfExec(&"c -r --outdir:{debug} {index}")
+  makedTask()
+  exec debug / filename
 
 task start, "Makes and runs the release build":
-  selfExec(&"c -r -d:release --outdir:{release} {index}")
+  makeTask()
+  exec release / filename
 
 # Dependencies
 
