@@ -3,7 +3,7 @@ This is an easily expandable Discord bot written in Nim.
 
 
 ## Setup and Installation
-After installing Nim, clone this repo, make an `config.toml` file, with the following fields:
+After installing Nim, clone this repo, then make a `config.toml` file with the following fields:
 ```toml
 [database]
 # Database url, implementation uses HarperDB
@@ -20,10 +20,10 @@ botPrefix = "!"
 # Cooldown between getting exp : int
 expCooldown = 2
 ```
-The `BOT_TOKEN` is the bot token given by discord, and the `BOT_PREFIX` is the leading character to invoke commands.
-To get all the dependencies can `nimble install --depsOnly`
-To make new commands simply make a new `.nim` file in the `stc/nimcordbot/command` folder.
-Then do the following:
+To get all the dependencies use `nimble install --depsOnly`
+
+This bot uses a custom DSL for creating commands to greatly simplify the process.
+To make new commands for the bot simply make a new `.nim` file in the `src/nimcordbot/command` folder, Then follow this structure:
 
 ```nim
 import command
@@ -33,5 +33,7 @@ command:
   body:
     discard await discord.api.sendMessage(discordMsg.channelID, "It sends this message")
 ```
+
+Compile like normal or use `nimble run` to run the bot.
 
 After compliation you can now send the message `!yourCommandName` and the bot will send a message containing "It sends this message" in response.
