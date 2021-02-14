@@ -34,9 +34,21 @@ command:
     discard await discord.api.sendMessage(discordMsg.channelID, "It sends this message")
 ```
 
-Compile like normal or use `nimble run` to run the bot.
+Compile like normal or use `nimble start` to run the bot in release mode.
 
 After compliation you can now send the message `!yourCommandName` and the bot will send a message containing "It sends this message" in response.
+
+## Building
+The following tasks are available for building and running the bot
+### Debug:
+- `nimble maked`
+- `nimble startd`
+
+### Release:
+- `nimble make`
+- `nimble start`
+
+These will output the executable to a debug or release folder inside bin.
 
 ## Planned Features
 - [x] Custom DSL for creating new bot commands
