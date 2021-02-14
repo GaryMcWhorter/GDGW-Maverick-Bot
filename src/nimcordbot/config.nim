@@ -24,4 +24,4 @@ var Config* = Toml.decode(rawToml, ConfigBase)
 proc reload*(cfg: ConfigBase) =
   rawToml = readFile("config.toml")
   Config = Toml.decode(rawToml, ConfigBase)
-  echo Config.prefs.botPrefix
+  echo Config.prefs.prefix
