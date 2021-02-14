@@ -1,6 +1,5 @@
 import std/[
   asyncdispatch,
-  hashes,
   json,
   options,
   os,
@@ -8,7 +7,10 @@ import std/[
   tables,
 ]
 
-import dimscord
+import
+  dimscord,
+  timestamp
+
 import nimcordbot/[
   dotfile,
   utils,
@@ -20,10 +22,7 @@ import nimcordbot/[
 type
   User = object
     exp: int
-
-proc hash(x: User): Hash =
-  result = x.exp.hash
-  result = !$result
+    lastMessageTimeStamp: TimeStamp
 
 var
   users = newTable[string, User]()
@@ -44,17 +43,22 @@ proc onEveryMessage(s: Shard, m: Message) {.async.} =
     echo "User found"
   else:
     # If not then upsert them to the db
-    echo "User put"
+    # echo "User put"
     let newRecord = %*[{"uid": uid, "name": m.author.username}]
     let res = await post(upsert("dev", "testUsers", $newRecord))
     if res.isSome:
       discard await discord.api.sendMessage(m.channelID, res.get())
 
+  # echo $users[m.author.id].lastMessageTimeStamp
+  let newTimestamp = initTimestamp()
   # increment exp to the db
-  let exp = await post(sql &"UPDATE dev.testUsers SET exp = COALESCE(exp + 3, 3) WHERE uid = '{uid}'")
-  if exp.isSome:
-    discard await discord.api.sendMessage(m.channelID, exp.get())
-
+  if newTimestamp - users[m.author.id].lastMessageTimeStamp < 2 * SECOND:
+    echo "TOO FAST"
+  else:
+    let exp = await post(sql &"UPDATE dev.testUsers SET exp = COALESCE(exp + 3, 3) WHERE uid = '{uid}'")
+    if exp.isSome:
+      discard await discord.api.sendMessage(m.channelID, exp.get())
+    users[m.author.id].lastMessageTimeStamp = newTimestamp
 
 
 # message_create event
