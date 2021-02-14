@@ -1,10 +1,10 @@
 import std/[
-    asyncdispatch,
-    httpclient,
-    json,
-    options,
-    os,
-    uri
+  asyncdispatch,
+  httpclient,
+  json,
+  options,
+  os,
+  uri
 ]
 
 let
@@ -17,8 +17,7 @@ proc post*(jbody: string): Future[Option[string]] {.async.} =
     "Content-Type": "application/json",
     "Authorization": DB_AUTH
   })
-  let res = await client.request(DB_URL,
-      httpMethod = HttpPost, body = jbody)
+  let res = await client.request(DB_URL, httpMethod = HttpPost, body = jbody)
   if res.code.is2xx:
     return some await res.body
   else:
@@ -30,8 +29,21 @@ proc toUid*(discordId: string): string =
 proc sql*(query: string): string =
   return """{"operation":"sql","sql":"""" & query & "\"}"
 
+proc insert*(schema: string, table: string, records: string): string =
+  return """{"operation":"insert","schema":"""" & schema & """","table":"""" &
+      table & """","records":""" & records & "}"
+
 proc upsert*(schema: string, table: string, records: string): string =
   return """{"operation":"upsert","schema":"""" & schema & """","table":"""" &
       table & """","records":""" & records & "}"
+
+proc update*(schema: string, table: string, records: string): string =
+  return """{"operation":"update","schema":"""" & schema & """","table":"""" &
+      table & """","records":""" & records & "}"
+
+proc delete*(schema: string, table: string, hash_values: openArray[
+    string]): string =
+  return """{"operation":"delete","schema":"""" & schema & """","table":"""" &
+      table & """","hash_values":""" & $hash_values & "}"
 
 

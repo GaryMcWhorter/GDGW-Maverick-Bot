@@ -10,5 +10,3 @@ command:
       for member in discordMsg.mention_users:
         foundUsers.add(member.id.toMention & " ")
       discard await discord.api.sendMessage(discordMsg.channelID, "thanks to " & foundUsers)
-
-    # discard await discord.api.sendMessage(discordMsg.channelID, "hello")
