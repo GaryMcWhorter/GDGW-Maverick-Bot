@@ -15,3 +15,7 @@ requires "dimscord >= 1.2.5"
 requires "constructor >= 0.1.0"
 requires "timestamp >= 0.4.1"
 requires "toml_serialization >= 0.1.0"
+
+task maked, "Makes the debug build":
+  switch("out", "bin/maverickbot")
+  selfExec("c ./src/nimcordBot")
