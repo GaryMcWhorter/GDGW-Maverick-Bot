@@ -1,7 +1,8 @@
 import std/[
   asyncdispatch,
   httpclient,
-  options
+  options,
+  strformat
 ]
 
 import
@@ -23,27 +24,39 @@ proc post*(jbody: string): Future[Option[string]] {.async.} =
   else:
     return none(string)
 
+proc bracket(content: string): string =
+  return '{' & content & '}'
+
 proc toUid*(discordId: string): string =
   return 'u' & discordId
 
 proc sql*(query: string): string =
   return """{"operation":"sql","sql":"""" & query & "\"}"
 
+proc createSchema*(schema: string): string =
+  echo bracket fmt""" "operation":"create_schema","schema":"{schema}" """
+  return bracket fmt""" "operation":"create_schema","schema":"{schema}" """
+
+proc createTable*(schema: string, table: string,
+    hashAttribute: string): string =
+  return """{"operation":"create_table","schema":"""" & schema &
+      """","table":"""" & table & """","hash_attribute":"""" & hashAttribute & "\"}"
+
+proc delete*(schema: string, table: string, hash_values: openArray[
+    string]): string =
+  return """{"operation":"delete","schema":"""" & schema & """","table":"""" &
+      table & """","hash_values":""" & $hash_values & "}"
+
 proc insert*(schema: string, table: string, records: string): string =
   return """{"operation":"insert","schema":"""" & schema & """","table":"""" &
-      table & """","records":""" & records & "}"
-
-proc upsert*(schema: string, table: string, records: string): string =
-  return """{"operation":"upsert","schema":"""" & schema & """","table":"""" &
       table & """","records":""" & records & "}"
 
 proc update*(schema: string, table: string, records: string): string =
   return """{"operation":"update","schema":"""" & schema & """","table":"""" &
       table & """","records":""" & records & "}"
 
-proc delete*(schema: string, table: string, hash_values: openArray[
-    string]): string =
-  return """{"operation":"delete","schema":"""" & schema & """","table":"""" &
-      table & """","hash_values":""" & $hash_values & "}"
+proc upsert*(schema: string, table: string, records: string): string =
+  return """{"operation":"upsert","schema":"""" & schema & """","table":"""" &
+      table & """","records":""" & records & "}"
 
 

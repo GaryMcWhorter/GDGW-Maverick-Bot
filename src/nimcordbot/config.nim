@@ -5,6 +5,7 @@ type
   Database = object
     url*: string
     auth*: string
+    schema*: string
 
   Bot = object
     token*: string
