@@ -9,6 +9,8 @@ After installing Nim, clone this repo, then make a `config.toml` file with the f
 # Database url, implementation uses HarperDB
 url="https://yourDBURL.harperdbcloud.com"
 auth="your db authkey here"
+# The schema in harper DB is your collection of tables
+schema = "dev"
 
 [bot]
 # Discord bot token
