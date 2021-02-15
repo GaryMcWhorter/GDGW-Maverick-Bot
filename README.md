@@ -54,6 +54,6 @@ These will output the executable to a debug or release folder inside bin.
 
 ## Planned Features
 - [x] Custom DSL for creating new bot commands
-- [ ] Integration with HarperDB for database operations
-- [ ] Built in leveling system for the server
-- [ ] Built in karma thanking system
+- [ ] Integration with HarperDB for database operations [In progress]
+- [ ] Built in leveling system for the server [In progress]
+- [x] Built in karma thanking system [basic implementation]
