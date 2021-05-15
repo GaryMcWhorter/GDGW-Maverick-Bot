@@ -10,4 +10,4 @@ command:
   name: justask
   description: "Sends a message to people that like wasting time"
   body:
-    discard await discord.api.sendMessage(discordMsg.channelID, theMessage)
+    sendMessage(theMessage)
