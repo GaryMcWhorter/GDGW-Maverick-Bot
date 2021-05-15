@@ -4,6 +4,7 @@ import std/[
   tables,
   asyncdispatch,
   macros,
+  sequtils
 ]
 import strutils except startswith
 export tables, dimscord, asyncdispatch 
@@ -87,18 +88,34 @@ macro command*(dslBody: untyped): untyped=
           try:
             parse[`typ`](`msg`)
           except:
-           return
+            sendMessage("Parameter mismatch at position: 0, expected: "  & $`typ`)
+            return
   elif args.len > 0:
-    let splitData = gensym(nskLet, "data")
-    argParsing.add quote do:
-      let `splitData` = split(`msg`)
+    let 
+      splitData = gensym(nskLet, "data")
+      argCount = newLit(args.len)
+      typeLayout = newLit(args.mapIt($it[1]).join(", "))
+    if args[^1][1].eqIdent("string"):
+      argParsing.add quote do:
+        let `splitData` = split(`msg`)
+        if `splitData`.len < `argCount`:
+          sendMessage("Too few parameters got: " & $`splitData`.len & " expected atleast: " & $`argCount` & " of parameters: `" & `typeLayout` & "`")
+          return
+    else:
+      argParsing.add quote do:
+        let `splitData` = split(`msg`)
+        if `argCount` != `splitData`.len:
+          sendMessage("Expected:  " & $`argCount` & " parameters but got: " & `splitData`.len)
+          return
     for i, (name, typ) in args:
       if args.high != i and not typ.eqIdent("string"):
+        let pos = newLit($i)
         argParsing.add quote do:
           let `name` = 
             try:
               parse[`typ`](`splitData`[`i`])
             except:
+              sendMessage("Parameter mismatch at position: " & `pos` & " expected: "  & $`typ`)
               return
       else:
         argParsing.add quote do:
